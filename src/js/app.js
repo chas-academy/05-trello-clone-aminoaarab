@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-// require('webpack-jquery-ui');
+require('webpack-jquery-ui');
 import '../css/styles.css';
 
 /**
@@ -109,6 +109,7 @@ const jtrello = (function() {
   }
 
   // All kod här
+
   return {
     init: init
   };
@@ -117,4 +118,13 @@ const jtrello = (function() {
 //usage
 $("document").ready(function() {
   jtrello.init();
+  $(function (){
+    $('.list-cards').sortable({
+      connectWith: 'ul'
+    });
+  })
+  
+  $( function() {
+    $( ".card" ).dialog();
+  } );
 });
