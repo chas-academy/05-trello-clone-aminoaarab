@@ -31,24 +31,58 @@ const jtrello = (function() {
     DOM.$deleteCardButton = $('.card > button.delete');
   }
 
-  function createTabs() {}
-  function createDialogs() {}
+  function createTabs() {
+    $('#tabs').tabs();
+  }
+ // function createDialogs() {}
 
   /*
   *  Denna metod kommer nyttja variabeln DOM för att binda eventlyssnare till
   *  createList, deleteList, createCard och deleteCard etc.
   */
   function bindEvents() {
-    DOM.$newListButton.on('click', createList);
-    DOM.$deleteListButton.on('click', deleteList);
-
-    DOM.$newCardForm.on('submit', createCard);
-    DOM.$deleteCardButton.on('click', deleteCard);
+    DOM.$newListButton.on("click", toggleDialog);
+    DOM.$board.on("click", ".list-header > button.delete", deleteList);
+    DOM.$listDialog.on("submit", "form.new-list", createList);
+ 
+    DOM.$board.on("submit", "form.new-card", createCard);
+    DOM.$board.on("click", ".card > button.delete", deleteCard);
   }
 
   /* ============== Metoder för att hantera listor nedan ============== */
   function createList() {
     event.preventDefault();
+    let listTitleInput = $(this).find("input");
+    let listDueDateInput = $(this).find("input.datepicker");
+    let newListTitle = listTitleInput.val();
+    let newListDueDate = listDueDateInput.val();
+ 
+    $('#list-creation-dialog').dialog("close");
+ 
+    listTitleInput.val("");
+    listDueDateInput.val("");
+
+    $('.column:last')
+    .before(`<div class="column">
+    <div class="list">
+        <div class="list-header">
+            ${newListTitle} | ${newListDueDate}
+            <button class="button delete">X</button>
+        </div>
+        <ul class="list-cards">
+            <li class="card">
+                Card #1
+                <button class="button delete">X</button>
+            </li>
+            <li class="add-new">
+                <form class="new-card" action="index.html">
+                    <input type="text" name="title" placeholder="Please name the card" />
+                    <button class="button add">Add new card</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>`)
     console.log("This should create a new list");
   }
 
@@ -96,6 +130,8 @@ const jtrello = (function() {
     bindEvents();
 
     sortableCard();
+    toggleDialog();
+   
   }
 
   // All kod här
@@ -107,7 +143,11 @@ const jtrello = (function() {
 
   function toggleDialog(){
     $('#list-creation-dialog').dialog("open");
-    $('list-creation-dialog input.dialog').datepicker();
+    $('#list-creation-dialog input.datepicker').datepicker();
+  }
+
+  function createDialogs(){
+    $('#list-creation-dialog').dialog({autoOpen: false})
   }
 
   return {
@@ -119,17 +159,4 @@ const jtrello = (function() {
 $("document").ready(function() {
   jtrello.init();
   
-  $(function(){
-    $('#list-creation-dialog').dialog({
-      autoOpen: true   
-    })
-
-    let boxInput = $(this).find('#list-creation-dialog');
-    let newBoxInput = boxInput.val();
-    
-    $(this)
-    .closest('.add-new')
-    .before('<li class="card">' + newBoxInput + '<button class="button delete">X</button></li>');
-    
-  });
 });
