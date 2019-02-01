@@ -62,33 +62,21 @@ const jtrello = (function() {
     let cardInput = $(this).find('input');
     let newCardTitle = cardInput.val();
 
+    
+
     if(!newCardTitle) return;
 
     $(this)
     .closest('.add-new')
     .before('<li class="card">' + newCardTitle + '<button class="button delete">X</button></li>');
 
-    // $(this)
-    // .parent()
-    // .prev()
-    // .find('button.delete')
-    // .click(deleteCard)
-
-    //sortCard();
-
     cardInput.val("");
 
-
-  // funtion sortCard() {
-  //   $('.card')sortable({
-  //     appentTo: document.body
-  //   });
-  //}
     console.log("this should create a new card");
   }
 
   function deleteCard() {
-   $(this).parents().remove();
+   $(this).closest('.board').remove();
     console.log("This should delete the card you clicked on");
   }
 
@@ -106,9 +94,21 @@ const jtrello = (function() {
     createDialogs();
 
     bindEvents();
+
+    sortableCard();
   }
 
   // All kod här
+  function sortableCard(){
+    $('.list-cards').sortable({
+      connectWith: 'ul'
+    });
+  }
+
+  function toggleDialog(){
+    $('#list-creation-dialog').dialog("open");
+    $('list-creation-dialog input.dialog').datepicker();
+  }
 
   return {
     init: init
@@ -118,13 +118,18 @@ const jtrello = (function() {
 //usage
 $("document").ready(function() {
   jtrello.init();
-  $(function (){
-    $('.list-cards').sortable({
-      connectWith: 'ul'
-    });
-  })
   
-  $( function() {
-    $( ".card" ).dialog();
-  } );
+  $(function(){
+    $('#list-creation-dialog').dialog({
+      autoOpen: true   
+    })
+
+    let boxInput = $(this).find('#list-creation-dialog');
+    let newBoxInput = boxInput.val();
+    
+    $(this)
+    .closest('.add-new')
+    .before('<li class="card">' + newBoxInput + '<button class="button delete">X</button></li>');
+    
+  });
 });
