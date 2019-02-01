@@ -2,6 +2,7 @@ import $ from 'jquery';
 
 require('webpack-jquery-ui');
 import '../css/styles.css';
+import 'jquery-ui/themes/base/all.css';
 
 /**
  * jtrello
@@ -30,11 +31,6 @@ const jtrello = (function() {
     DOM.$newCardForm = $('form.new-card');
     DOM.$deleteCardButton = $('.card > button.delete');
   }
-
-  function createTabs() {
-    $('#tabs').tabs();
-  }
- // function createDialogs() {}
 
   /*
   *  Denna metod kommer nyttja variabeln DOM för att binda eventlyssnare till
@@ -83,10 +79,13 @@ const jtrello = (function() {
         </ul>
     </div>
 </div>`)
+
+sortableCard();
     console.log("This should create a new list");
   }
 
   function deleteList() {
+    $(this).closest('.column').remove();
     console.log("This should delete the list you clicked on");
   }
 
@@ -95,8 +94,6 @@ const jtrello = (function() {
     event.preventDefault();
     let cardInput = $(this).find('input');
     let newCardTitle = cardInput.val();
-
-    
 
     if(!newCardTitle) return;
 
@@ -110,7 +107,7 @@ const jtrello = (function() {
   }
 
   function deleteCard() {
-   $(this).closest('.board').remove();
+   $(this).closest('.card').remove();
     console.log("This should delete the card you clicked on");
   }
 
@@ -126,7 +123,6 @@ const jtrello = (function() {
     captureDOMEls();
     createTabs();
     createDialogs();
-
     bindEvents();
 
     sortableCard();
@@ -139,6 +135,10 @@ const jtrello = (function() {
     $('.list-cards').sortable({
       connectWith: 'ul'
     });
+
+    $('.column').sortable({
+      connectWith: 'div'
+    })
   }
 
   function toggleDialog(){
@@ -148,6 +148,10 @@ const jtrello = (function() {
 
   function createDialogs(){
     $('#list-creation-dialog').dialog({autoOpen: false})
+  }
+ 
+  function createTabs() {
+    $('#tabs').tabs();
   }
 
   return {
