@@ -30,6 +30,7 @@ const jtrello = (function() {
 
     DOM.$newCardForm = $('form.new-card');
     DOM.$deleteCardButton = $('.card > button.delete');
+    DOM.$fadeButton = $('#fadeColumn');
   }
 
   /*
@@ -43,6 +44,8 @@ const jtrello = (function() {
  
     DOM.$board.on("submit", "form.new-card", createCard);
     DOM.$board.on("click", ".card > button.delete", deleteCard);
+
+    DOM.$fadeButton.on("click", fadeEffect)
   }
 
   /* ============== Metoder för att hantera listor nedan ============== */
@@ -53,6 +56,9 @@ const jtrello = (function() {
     let newListTitle = listTitleInput.val();
     let newListDueDate = listDueDateInput.val();
  
+    if(!newListTitle && !newListDueDate) return;
+    
+    
     $('#list-creation-dialog').dialog("close");
  
     listTitleInput.val("");
@@ -66,10 +72,6 @@ const jtrello = (function() {
             <button class="button delete">X</button>
         </div>
         <ul class="list-cards">
-            <li class="card">
-                Card #1
-                <button class="button delete">X</button>
-            </li>
             <li class="add-new">
                 <form class="new-card" action="index.html">
                     <input type="text" name="title" placeholder="Please name the card" />
@@ -80,12 +82,14 @@ const jtrello = (function() {
     </div>
 </div>`)
 
+
+
 sortableCard();
     console.log("This should create a new list");
   }
 
   function deleteList() {
-    $(this).closest('.column').remove();
+    $(this).closest('.column').toggle("explode");
     console.log("This should delete the list you clicked on");
   }
 
@@ -101,18 +105,17 @@ sortableCard();
     .closest('.add-new')
     .before('<li class="card">' + newCardTitle + '<button class="button delete">X</button></li>');
 
+
     cardInput.val("");
 
     console.log("this should create a new card");
   }
 
   function deleteCard() {
-   $(this).closest('.card').remove();
+   $(this).closest('.card').remove()
+
     console.log("This should delete the card you clicked on");
   }
-
-  // Metod för att rita ut element i DOM:en
-  function render() {}
 
   /* =================== Publika metoder nedan ================== */
 
@@ -124,10 +127,7 @@ sortableCard();
     createTabs();
     createDialogs();
     bindEvents();
-
-    sortableCard();
-    toggleDialog();
-   
+    sortableCard(); 
   }
 
   // All kod här
@@ -136,22 +136,26 @@ sortableCard();
       connectWith: 'ul'
     });
 
-    $('.column').sortable({
-      connectWith: 'div'
-    })
+     $('.board').sortable()
   }
 
   function toggleDialog(){
     $('#list-creation-dialog').dialog("open");
     $('#list-creation-dialog input.datepicker').datepicker();
+   
   }
 
   function createDialogs(){
     $('#list-creation-dialog').dialog({autoOpen: false})
+    $('#list-creation-dialog').slideToggle();
   }
  
   function createTabs() {
     $('#tabs').tabs();
+  }
+
+  function fadeEffect() {
+    $('.list').fadeToggle('slow', 'linear')
   }
 
   return {
