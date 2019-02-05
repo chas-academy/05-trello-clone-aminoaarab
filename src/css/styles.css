@@ -1,6 +1,7 @@
 html,
+
 body {
-  background: #9999ff;
+  background: whitesmoke;
   margin: 0;
   padding: 30px 0 0;
   font-family: sans-serif;
@@ -191,6 +192,18 @@ input {
   transform: rotate(4deg);
 }
 
-body {
-  background-color: blue;
+.darkTheme {
+  background-color: #1a1a1a;
+}
+
+.list1 {
+  background-color: #404040;
+}
+
+.list-header1 {
+  color: whitesmoke;
+}
+
+.button1 {
+  background-color: #3385ff;
 }

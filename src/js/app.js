@@ -3,6 +3,7 @@ import $ from 'jquery';
 require('webpack-jquery-ui');
 import '../css/styles.css';
 import 'jquery-ui/themes/base/all.css';
+import { setImmediate } from 'timers';
 
 /**
  * jtrello
@@ -31,6 +32,7 @@ const jtrello = (function() {
     DOM.$newCardForm = $('form.new-card');
     DOM.$deleteCardButton = $('.card > button.delete');
     DOM.$fadeButton = $('#fadeColumn');
+    DOM.$widgetButton = $('#widgetBackG');
   }
 
   /*
@@ -46,6 +48,7 @@ const jtrello = (function() {
     DOM.$board.on("click", ".card > button.delete", deleteCard);
 
     DOM.$fadeButton.on("click", fadeEffect)
+    DOM.$widgetButton.on('click', myWidget)
   }
 
   /* ============== Metoder för att hantera listor nedan ============== */
@@ -82,10 +85,7 @@ const jtrello = (function() {
     </div>
 </div>`)
 
-
-
 sortableCard();
-    console.log("This should create a new list");
   }
 
   function deleteList() {
@@ -105,16 +105,11 @@ sortableCard();
     .closest('.add-new')
     .before('<li class="card">' + newCardTitle + '<button class="button delete">X</button></li>');
 
-
     cardInput.val("");
-
-    console.log("this should create a new card");
   }
 
   function deleteCard() {
    $(this).closest('.card').remove()
-
-    console.log("This should delete the card you clicked on");
   }
 
   /* =================== Publika metoder nedan ================== */
@@ -128,6 +123,7 @@ sortableCard();
     createDialogs();
     bindEvents();
     sortableCard(); 
+    //myWidget();
   }
 
   // All kod här
@@ -142,12 +138,11 @@ sortableCard();
   function toggleDialog(){
     $('#list-creation-dialog').dialog("open");
     $('#list-creation-dialog input.datepicker').datepicker();
-   
   }
 
   function createDialogs(){
     $('#list-creation-dialog').dialog({autoOpen: false})
-    $('#list-creation-dialog').slideToggle();
+    $('#list-creation-dialog')
   }
  
   function createTabs() {
@@ -158,6 +153,23 @@ sortableCard();
     $('.list').fadeToggle('slow', 'linear')
   }
 
+  function myWidget() {
+    
+    $.widget('trello.theme', {
+
+      _create: function () {
+        $("body").addClass('darkTheme')
+        $('.list').addClass('list1')
+        $('.list-header').addClass('list-header1')
+        $('button').addClass('button1')
+      }
+  })
+
+  $("body").theme();
+  
+    console.log("widget knapp funkar");
+  }
+
   return {
     init: init
   };
@@ -166,5 +178,4 @@ sortableCard();
 //usage
 $("document").ready(function() {
   jtrello.init();
-  
 });
