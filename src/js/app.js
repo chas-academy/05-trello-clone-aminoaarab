@@ -3,7 +3,6 @@ import $ from 'jquery';
 require('webpack-jquery-ui');
 import '../css/styles.css';
 import 'jquery-ui/themes/base/all.css';
-import { setImmediate } from 'timers';
 
 /**
  * jtrello
@@ -48,7 +47,7 @@ const jtrello = (function() {
     DOM.$board.on("click", ".card > button.delete", deleteCard);
 
     DOM.$fadeButton.on("click", fadeEffect)
-    DOM.$widgetButton.on('click', myWidget)
+    // DOM.$widgetButton.on('click', myWidget)
   }
 
   /* ============== Metoder för att hantera listor nedan ============== */
@@ -85,12 +84,12 @@ const jtrello = (function() {
     </div>
 </div>`)
 
+
+}
 sortableCard();
-  }
 
   function deleteList() {
     $(this).closest('.column').toggle("explode");
-    console.log("This should delete the list you clicked on");
   }
 
   /* =========== Metoder för att hantera kort i listor nedan =========== */
@@ -123,7 +122,8 @@ sortableCard();
     createDialogs();
     bindEvents();
     sortableCard(); 
-    //myWidget();
+    
+    
   }
 
   // All kod här
@@ -132,7 +132,7 @@ sortableCard();
       connectWith: 'ul'
     });
 
-     $('.board').sortable()
+     $('.board').sortable({})
   }
 
   function toggleDialog(){
@@ -153,22 +153,21 @@ sortableCard();
     $('.list').fadeToggle('slow', 'linear')
   }
 
-  function myWidget() {
-    
-    $.widget('trello.theme', {
+  $.widget('trello.theme', {
+    _create() {
+      $('#widgetBackG').click(() => {
+        $('body, list1').toggleClass('button1')
+        $('.list').toggleClass('list1')
+        $('.list-header').toggleClass('list-header1')
+        $('button').toggleClass('button2')
+      });
 
-      _create: function () {
-        $("body").addClass('darkTheme')
-        $('.list').addClass('list1')
-        $('.list-header').addClass('list-header1')
-        $('button').addClass('button1')
-      }
-  })
+    },
+  });
+  
 
   $("body").theme();
-  
-    console.log("widget knapp funkar");
-  }
+
 
   return {
     init: init

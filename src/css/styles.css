@@ -192,8 +192,12 @@ input {
   transform: rotate(4deg);
 }
 
-.darkTheme {
+.button1 {
   background-color: #1a1a1a;
+}
+
+.button2 {
+  background-color: rgb(106, 106, 250);
 }
 
 .list1 {
@@ -202,8 +206,4 @@ input {
 
 .list-header1 {
   color: whitesmoke;
-}
-
-.button1 {
-  background-color: #3385ff;
 }
